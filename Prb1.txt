@@ -1,0 +1,114 @@
+.model small
+.stack 100h
+
+.data
+  
+  input_x db 'Enter the value of X: $'
+  input_z db 'Enter the  value of Z: $'
+  output db  'The value of Y is: $'
+  error  db  'Bound Exceeds $'
+  
+  
+.code
+
+main proc 
+    mov ax,@data
+    mov ds,ax
+    
+    
+    lea dx,input_x
+    mov ah,9
+    int 21h 
+    
+    mov ah,1
+    int 21h
+    
+    call char_to_num
+    mov bl,al
+    
+    call New_Line
+    
+   
+   
+     
+  
+    lea dx,input_z
+    mov ah,9
+    int 21h 
+    
+     
+    mov ah,1
+    int 21h
+    
+    
+    call char_to_num
+    
+    mov cl,al
+    call New_Line
+    
+    xor dl,dl
+    mov dl,bl
+    add dl,dl
+    sub dl,cl
+    add dl,3
+    
+    xor cl,cl
+    mov bl,dl
+    xor dl,dl
+    
+
+    
+    
+    cmp bl,9
+    jg Exceeded
+      lea dx,output
+      mov ah,9
+      int 21h 
+    
+      mov al,bl
+      call num_to_char
+      xor dl,dl
+      mov dl,al
+      
+      
+      
+      mov ah,2
+      int 21h
+      jmp end 
+      
+   Exceeded:
+       lea dx,error
+       mov ah,9
+       int 21h
+      
+   end:
+      
+      
+      mov ah,4ch
+      int 21h
+      
+    
+    
+    
+    main endp
+
+New_Line proc
+    mov ah,2
+    mov dl,0ah
+    int 21h
+    mov dl,0dh
+    int 21h
+    
+    mov ah,1
+    ret 
+    
+char_to_num proc
+    sub al,'0'
+    ret  
+    
+num_to_char proc
+    add al,'0'
+    ret
+
+
+end main

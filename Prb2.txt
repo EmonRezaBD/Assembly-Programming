@@ -1,0 +1,139 @@
+
+;Problem-2
+
+.model small
+.stack 100h
+
+.data
+
+input_a db 'Enter the value of A: $'
+input_b db 'Enter the value of B: $'  
+output db  'Result is: $'
+
+
+.code
+
+main proc 
+    
+
+    call Take_Input_A ;Text for taking input A
+    int 21h 
+    call Convert_In_Num ;Converting the char into Decimal
+    mov bl,al
+    
+    call New_Line 
+    
+    call Take_Input_B  ;Text for taking input B
+    int 21h
+    call Convert_In_Num ;Converting the char into Decimal
+    mov cl,al      
+    
+    call New_Line 
+    
+    call Output_Func    ;Text for showing the output text
+    
+    cmp bl,cl
+    jge Print_A_Greater  
+    
+    sub cl,bl   ;
+    mov al,cl   ;   
+    
+    call Num_To_Char    ;Converting Decimal to char
+    
+                         
+    xor dl,dl            ;Clearing DL
+    mov dl,al 
+    mov ah,2     
+    
+    int 21h
+          
+   
+    jmp Exit
+    
+ 
+    Print_A_Greater:  
+    sub bl,cl  
+    mov al,bl  
+    
+    call Num_To_Char  
+   
+     
+     
+    xor dl,dl
+    mov dl,al 
+    mov ah,2  
+    
+   
+    
+    int 21h
+    jmp Exit
+    
+    Exit:
+    mov ah,4ch
+    int 21h
+    
+    
+    main endp 
+
+Take_Input_A proc          ;Process for printing input text
+    mov ax,@data
+    mov ds,ax
+    lea dx,input_a
+    mov ah,9
+    int 21h
+    mov ah,1 
+    
+    ret 
+    Take_Input_A endp 
+
+
+Take_Input_B proc         ;Process for printing input text
+    mov ax,@data
+    mov ds,ax
+    lea dx,input_b
+    mov ah,9 
+    int 21h
+    mov ah,1
+    
+    ret
+    Take_Input_B endp   
+
+
+
+Output_Func proc            ;Process for printing output text
+    mov ax,@data
+    mov ds,ax
+    lea dx,output
+    mov ah,9 
+    int 21h
+  
+    ret 
+    Output_Func endp
+    
+
+
+
+
+Convert_In_Num proc          ;Process for converting char to num
+    sub al,'0'
+    ret
+    Convert_In_Num endp 
+
+
+Num_To_Char proc             ;Process for converting num to char
+    add al,'0'             
+    ret
+    Num_To_Char endp
+
+
+New_Line proc                ;Process for printing new line
+    mov ah,2
+    mov dl,0ah
+    int 21h 
+    
+    mov dl,0dh
+    int 21h  
+    ret
+    New_Line endp 
+
+end main                   ;End of main proc
